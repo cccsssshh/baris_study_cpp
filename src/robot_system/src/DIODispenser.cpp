@@ -8,7 +8,7 @@ std::string DIODispenser::get_before_cmd() const {
     return before_cmd;
 }
 
-message::srv::DispenseService::Response DIODispneser::dispense(const std::string& command) {
+message::srv::DispenseService::Response DIODispenser::dispense(std::string_view command) {
     message::srv::DispenseService::Response response;
     before_cmd = command;
 
@@ -18,7 +18,7 @@ message::srv::DispenseService::Response DIODispneser::dispense(const std::string
     std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&now_c));
 
     response.seq_no = std::string(buf);
-    response.response_cd = ResponseCode::SUCCESS;
+    response.response_cd = static_cast<uint16_t>(ResponseCode::SUCCESS);
 
     return response;
 }

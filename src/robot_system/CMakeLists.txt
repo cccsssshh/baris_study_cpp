@@ -9,9 +9,63 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+##############################
+find_package(rcl_interfaces REQUIRED)
+find_package(library REQUIRED)
+find_package(message REQUIRED)
+
+include_directories(
+  include
+  ${rclcpp_INCLUDE_DIRS}
+  ${library_INCLUDE_DIRS}
+  ${message_INCLUDE_DIRS}
+)
+##############################
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+##############################################################
+# Add library
+add_library(${PROJECT_NAME}
+  src/DIODispenser.cpp
+  src/DispenserNode.cpp
+)
+
+ament_target_dependencies(${PROJECT_NAME}
+rclcpp
+library
+message
+rcl_interfaces
+)
+
+#execute 설정
+#*********************************#
+add_executable(DispenserNode
+  src/DispenserNodeMain.cpp
+)
+
+# Link the executable to the library
+target_link_libraries(DispenserNode
+${PROJECT_NAME}
+)
+
+# Install targets
+install(TARGETS
+${PROJECT_NAME}
+DispenserNode
+ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+#*****************************************#
+
+# Install include directory
+install(DIRECTORY include/
+  DESTINATION include/
+)
+#####################################################################
 
 
 if(BUILD_TESTING)
